@@ -1,0 +1,53 @@
+<button class="leave-btn" (click)="logout()">Logout</button>
+
+<h2>My Tasks</h2>
+<button class="create-btn" (click)="loadEvents()">Refresh List</button>
+
+<div *ngIf="events.length === 0" class="empty-events">
+  <div class="empty-box">
+    <h3>You don't have any tasks yet 😴</h3>
+    <p>Create your first task to get started </p>
+  </div>
+</div>
+
+
+<div class="events-container" *ngIf="events.length > 0">
+  <div class="event-card" *ngFor="let e of events">
+    <h3>{{ e.name }}</h3>
+    <p>{{ e.content || 'No description' }}</p>
+    <p>{{ e.time | date:'short' }}</p>
+
+    <button (click)="startEdit(e)">Edit</button>
+    <button (click)="deleteEvent(e.id)">Delete</button>
+  </div>
+</div>
+
+<button class="create-btn" (click)="showCreateForm = true">Create Task</button>
+
+<div class="modal" [ngClass]="{ 'show': showCreateForm }" *ngIf="showCreateForm">
+  <div class="modal-content">
+    <h3>New Task</h3>
+    <form (ngSubmit)="createEvent()">
+      <input [(ngModel)]="newEvent.name" name="name" placeholder="Title*" required>
+      <input [(ngModel)]="newEvent.content" name="content" placeholder="Description" required>
+      <input [(ngModel)]="newEvent.time" name="time" type="datetime-local" required>
+      <br><br>
+      <button type="submit">Create</button>
+      <button type="button" (click)="showCreateForm = false">Cancel</button>
+    </form>
+  </div>
+</div>
+
+<div class="modal" [ngClass]="{ 'show': editEvent }" *ngIf="editEvent">
+  <div class="modal-content">
+    <h3>Edit Task</h3>
+    <form (ngSubmit)="saveEdit()">
+      <input [(ngModel)]="editEvent.name" name="editName" placeholder="Title*" required>
+      <input [(ngModel)]="editEvent.content" name="editContent" placeholder="Description">
+      <input [(ngModel)]="editEvent.time" name="editTime" type="datetime-local" required>
+      <br><br>
+      <button type="submit">Save</button>
+      <button type="button" (click)="cancelEdit()">Cancel</button>
+    </form>
+  </div>
+</div>
